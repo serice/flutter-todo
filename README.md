@@ -1,22 +1,29 @@
 # TODO
-flutter pub get
-flutter pub run build_runner build
+```flutter pub get```
+
+```flutter pub run build_runner build```
 
 ## HINT
 State
+
 List removeWhere(삭제), indexWhere(수정)
 
 ## TALK
 Struct
+
 Widget
  - Component
+
 json_serializable (  )
  - ```flutter pub run build_runner build```
 
 ## QUESTION
 이 프로그램은 무엇이 문제 인가???
+
 Immutable
+
 Singleton
+
 State
 
 ## REFERENCE
@@ -36,11 +43,11 @@ State
 - [Immutable]()
 
 ## PLUGIN
-.ignore
-Flutter
-Dart
-Rainbow brackets
-DTO generator
+- .ignore
+- Flutter
+- Dart
+- Rainbow brackets
+- DTO generator
 
-GitHub copilot
-Translation
+- GitHub copilot
+- Translation
