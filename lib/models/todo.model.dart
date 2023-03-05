@@ -1,23 +1,27 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 import 'user.model.dart';
 
 part 'todo.model.g.dart';
 
 @JsonSerializable()
 class Todo {
-  Todo(
-    this.uuid,
-    this.user,
-    this.date,
-    this.subject,
-    this.todo,
-  );
+  Todo({
+    required this.user,
+    required this.date,
+    required this.subject,
+    required this.todo,
+    String? uuid,
+    }
+  ) {
+    this.uuid = uuid ?? const Uuid().v4();
+  }
 
-  final String uuid;
-  final User user;
-  final DateTime date;
-  final String subject;
-  final String todo;
+  late String uuid;
+  User user;
+  DateTime date;
+  String subject;
+  String todo;
 
   factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
   Map<String, dynamic> toJson() => _$TodoToJson(this);

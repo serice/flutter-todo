@@ -41,6 +41,8 @@ dependencies:
   form_builder_validators: ^8.5.0
   intl: ^0.17.0
   uuid: ^3.0.7
+  get: ^4.6.5
+  provider: ^6.0.5
 
 dev_dependencies:
   flutter_test:

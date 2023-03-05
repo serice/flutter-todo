@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:intl/intl.dart';
 import 'package:my_memo/models/todo.model.dart';
-import 'package:my_memo/services/todo.service.dart';
 
-import '../../models/user.model.dart';
+import '../../../providers/getx/auth.controller.dart';
+import '../../../providers/getx/todo.controller.dart';
 
-class TodoPage extends StatefulWidget {
-  const TodoPage({super.key, required this.me, this.todo});
-
-  final User me;
-  final Todo? todo;
+class GetXTodoPage extends StatefulWidget {
+  const GetXTodoPage({super.key});
 
   @override
-  State<TodoPage> createState() => _TodoPageState();
+  State<GetXTodoPage> createState() => _GetXTodoPageState();
 }
 
-class _TodoPageState extends State<TodoPage> {
+class _GetXTodoPageState extends State<GetXTodoPage> {
 
-  final TodoService todoService = TodoService();
+  final TodoController todoController = TodoController.to;
+  final AuthController authController = AuthController.to;
   final DateTime now = DateTime.now();
 
-  late User me;
   late Todo? todo;
   final _formKey = GlobalKey<FormBuilderState>();
   bool _subjectHasError = false;
@@ -30,8 +28,7 @@ class _TodoPageState extends State<TodoPage> {
 
   @override
   void initState() {
-    me = widget.me;
-    todo = widget.todo;
+    todo = Get.arguments;
     super.initState();
   }
 
@@ -39,7 +36,7 @@ class _TodoPageState extends State<TodoPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(todo != null ? '${me.name} Todo 수정 하기' : '${me.name} Todo 만들기'),
+          title: Text(todo != null ? '${todo!.user.name} Todo 수정 하기' : '${authController.me.value.name} Todo 만들기'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10),
@@ -54,7 +51,7 @@ class _TodoPageState extends State<TodoPage> {
                   },
                   autovalidateMode: AutovalidateMode.always,
                   initialValue: {
-                    'name': me.name,
+                    'name': todo != null ? todo!.user.name : authController.me.value.name,
                     'date' : todo != null ? todo?.date : DateTime(now.year, now.month, now.day),
                     'subject' : todo?.subject,
                     'todo' : todo?.todo,
@@ -186,24 +183,27 @@ class _TodoPageState extends State<TodoPage> {
   }
 
   void onSaveTodo(Map<String, dynamic> value) {
-    Todo newTodo = todoService.addTodo(Todo(
-      uuid: todo?.uuid,
-      user: me,
-      date: value['date'],
-      subject: value['subject'],
-      todo: value['todo'],
-    ));
-    // TODO : 갱신을 위해 돌려 줘야 함
-    Navigator.pop( context, { 'todo': newTodo, 'action': todo == null ? 'NEW' : 'MODIFY'} );
+    if(todo == null) {
+      todoController.addTodo(
+        date: value['date'],
+        subject: value['subject'],
+        todo: value['todo'],
+      );
+    } else {
+      todoController.updateTodo(todo!.uuid, date: value['date'],
+        subject: value['subject'],
+        todo: value['todo'],
+      );
+    }
+    Get.back();
   }
 
   void onDeleteTodo() {
-    // TODO : 갱신을 위해 돌려 줘야 함
-    Navigator.pop( context, { 'todo': todo, 'action': 'DELETE'} );
+    todoController.deleteTodo(todo!.uuid);
+    Get.back();
   }
 
   void onCloseTodo() {
-    // TODO : 갱신을 위해 돌려 줘야 함
-    Navigator.pop( context );
+    Get.back();
   }
 }

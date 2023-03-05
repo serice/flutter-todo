@@ -7,11 +7,11 @@ part of 'todo.model.dart';
 // **************************************************************************
 
 Todo _$TodoFromJson(Map<String, dynamic> json) => Todo(
-      json['uuid'] as String,
-      User.fromJson(json['user'] as Map<String, dynamic>),
-      DateTime.parse(json['date'] as String),
-      json['subject'] as String,
-      json['todo'] as String,
+      user: User.fromJson(json['user'] as Map<String, dynamic>),
+      date: DateTime.parse(json['date'] as String),
+      subject: json['subject'] as String,
+      todo: json['todo'] as String,
+      uuid: json['uuid'] as String?,
     );
 
 Map<String, dynamic> _$TodoToJson(Todo instance) => <String, dynamic>{

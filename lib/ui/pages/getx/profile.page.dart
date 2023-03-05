@@ -1,39 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:my_memo/services/auth.service.dart';
 
-import '../../models/user.model.dart';
+import '../../../models/user.model.dart';
+import '../../../providers/getx/auth.controller.dart';
 
 // TODO immutable
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key, required this.me});
-
-  final User me;
+class GetXProfilePage extends StatefulWidget {
+  const GetXProfilePage({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<GetXProfilePage> createState() => _GetXProfilePageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _GetXProfilePageState extends State<GetXProfilePage> {
 
-  final AuthService authService = AuthService();
-
-  late User me;
+  final AuthController authController = AuthController.to;
   final _formKey = GlobalKey<FormBuilderState>();
   bool _nameHasError = false;
-
-  @override
-  void initState() {
-    me = widget.me;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('${me.name} Profile'),
+          title: Obx(()=> Text('${authController.me.value.name} Profile')),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10),
@@ -48,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   autovalidateMode: AutovalidateMode.always,
                   initialValue: {
-                    'name': me.name,
+                    'name': authController.me.value.name,
                   },
                   // skipDisabled: true,
                   child: Column(
@@ -139,16 +130,10 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void onSaveMe(Map<String, dynamic> value) {
-    User newMe = authService.setMe(User(name: value['name']));
-    // TODO : question
-    setState(() {
-      me = newMe;
-    });
-    // TODO end
+    authController.setMe(name: value['name']);
   }
 
   void onClose() {
-    // TODO : 갱신을 위해 돌려 줘야 함
-    Navigator.pop( context, me );
+    Get.back();
   }
 }

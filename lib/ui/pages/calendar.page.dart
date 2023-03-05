@@ -11,16 +11,16 @@ import '../../services/auth.service.dart';
 import '../../services/todo.service.dart';
 import '../../models/user.model.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class CalendarPage extends StatefulWidget {
+  const CalendarPage({super.key});
 
   final String title = 'Todo Calendar';
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<CalendarPage> createState() => _CalendarPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _CalendarPageState extends State<CalendarPage> {
 
   final TodoService todoService = TodoService();
   final AuthService authService = AuthService();
