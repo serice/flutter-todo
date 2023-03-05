@@ -7,6 +7,7 @@
 State
 
 List removeWhere(삭제), indexWhere(수정)
+Get toNamed('/todo', arguments: todo), Obx(()=> ... ), argements
 
 ## TALK
 Struct
@@ -33,6 +34,8 @@ State
 - [flutter_form_builder](https://pub.dev/packages/flutter_form_builder/example)
 - [form_builder_validators](https://pub.dev/packages/form_builder_validators/example)
 
+- [get](https://pub.dev/packages/get)
+- [provider](https://github.com/rrousselGit/provider)
 - [Json to object](https://flutter-ko.dev/docs/development/data-and-backend/json)
 
 ## CF
