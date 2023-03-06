@@ -37,6 +37,7 @@ State
 
 - [get](https://pub.dev/packages/get)
 - [provider](https://github.com/rrousselGit/provider)
+- [go_router](https://pub.dev/documentation/go_router/latest/topics/Get%20started-topic.html)
 - [Json to object](https://flutter-ko.dev/docs/development/data-and-backend/json)
 
 ## CF
