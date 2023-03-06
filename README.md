@@ -7,6 +7,7 @@
 State
 
 List removeWhere(삭제), indexWhere(수정)
+
 Get toNamed('/todo', arguments: todo), Obx(()=> ... ), argements
 
 ## TALK
