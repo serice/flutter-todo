@@ -10,7 +10,7 @@ class AuthProvider with ChangeNotifier {
 
   User get me => _me;
 
-  void init() {
+  AuthProvider() {
     _me.name = _authService.me().name;
   }
 

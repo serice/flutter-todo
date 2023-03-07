@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_memo/ui/pages/todo_list.page.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../../../models/todo.model.dart';
-import '../../../providers/provider/auth.provider.dart';
 import '../../../providers/provider/todo.provider.dart';
 
 class ProviderCalendarPage extends StatelessWidget {
@@ -30,72 +28,40 @@ class ProviderCalendarPage extends StatelessWidget {
     );
   }
 
-  Widget calendarWidget(BuildContext context) {
-    // return Consumer<TodoProvider>(
-    //   builder: (context, todoProvider, child) =>
-    //       SfCalendar(
-    //         view: CalendarView.month,
-    //         dataSource: _TodoDataSource(todoProvider.todos),
-    //         monthViewSettings: const MonthViewSettings(
-    //             appointmentDisplayMode: MonthAppointmentDisplayMode.appointment
-    //         ),
-    //         onTap: (CalendarTapDetails details) {
-    //           switch(details.targetElement) {
-    //           // not working on mobile
-    //             case CalendarElement.appointment:
-    //               if(details.appointments!.isNotEmpty && details.appointments != null){
-    //                 final todo = details.appointments![0] as Todo;
-    //                 gotoTodoDetailPage(context, todo);
-    //               }
-    //               break;
-    //             case CalendarElement.calendarCell:
-    //               if(details.appointments!.isNotEmpty && details.appointments != null){
-    //                 final todos = details.appointments!.map((e) => e as Todo).toList();
-    //                 gotoTodoListPage(context, todos);
-    //               }
-    //               break;
-    //             case CalendarElement.header:
-    //             case CalendarElement.viewHeader:
-    //             case CalendarElement.agenda:
-    //             case CalendarElement.allDayPanel:
-    //             case CalendarElement.moreAppointmentRegion:
-    //             case CalendarElement.resourceHeader:
-    //               break;
-    //           }
-    //         },
-    //       ),
-    // );
-    var todoProvider = Provider.of<TodoProvider>(context, listen: false);
-    return SfCalendar(
-      view: CalendarView.month,
-      dataSource: _TodoDataSource(todoProvider.todos),
-      monthViewSettings: const MonthViewSettings(
-          appointmentDisplayMode: MonthAppointmentDisplayMode.appointment
+  Widget calendarWidget(BuildContext _) {
+    // final todos = context.select<>((todoProvider) => todoProvider.todos);
+    return Consumer<TodoProvider>(
+      builder: (context, todoProvider, __) => SfCalendar(
+        view: CalendarView.month,
+        dataSource: _TodoDataSource(todoProvider.todos),
+        monthViewSettings: const MonthViewSettings(
+            appointmentDisplayMode: MonthAppointmentDisplayMode.appointment
+        ),
+        onTap: (CalendarTapDetails details) {
+          switch(details.targetElement) {
+          // not working on mobile
+            case CalendarElement.appointment:
+              if(details.appointments!.isNotEmpty && details.appointments != null) {
+                final todo = details.appointments![0] as Todo;
+                gotoTodoDetailPage(context, todo);
+              }
+              break;
+            case CalendarElement.calendarCell:
+              if(details.appointments!.isNotEmpty && details.appointments != null) {
+                final selectedTodos = details.appointments!.map((e) => e as Todo).toList();
+                gotoTodoListPage(context, selectedTodos);
+              }
+              break;
+            case CalendarElement.header:
+            case CalendarElement.viewHeader:
+            case CalendarElement.agenda:
+            case CalendarElement.allDayPanel:
+            case CalendarElement.moreAppointmentRegion:
+            case CalendarElement.resourceHeader:
+              break;
+          }
+        },
       ),
-      onTap: (CalendarTapDetails details) {
-        switch(details.targetElement) {
-        // not working on mobile
-          case CalendarElement.appointment:
-            if(details.appointments!.isNotEmpty && details.appointments != null){
-              final todo = details.appointments![0] as Todo;
-              gotoTodoDetailPage(context, todo);
-            }
-            break;
-          case CalendarElement.calendarCell:
-            if(details.appointments!.isNotEmpty && details.appointments != null){
-              final todos = details.appointments!.map((e) => e as Todo).toList();
-              gotoTodoListPage(context, todos);
-            }
-            break;
-          case CalendarElement.header:
-          case CalendarElement.viewHeader:
-          case CalendarElement.agenda:
-          case CalendarElement.allDayPanel:
-          case CalendarElement.moreAppointmentRegion:
-          case CalendarElement.resourceHeader:
-            break;
-        }
-      },
     );
   }
 

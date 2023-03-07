@@ -13,37 +13,38 @@ class ProviderTodoListPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var todoProvider = Provider.of<TodoProvider>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(title),
       ),
       body: Column(
         children: [
-          DataTable(
-            columns: const <DataColumn>[
-              DataColumn(
-                label: Expanded(
-                  child: Text('Name', style: TextStyle(fontStyle: FontStyle.italic))
+          Consumer<TodoProvider>(
+            builder: (context, todoProvider, __) => DataTable(
+              columns: const <DataColumn>[
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Name', style: TextStyle(fontStyle: FontStyle.italic))
+                  ),
                 ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Date', style: TextStyle(fontStyle: FontStyle.italic))
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Date', style: TextStyle(fontStyle: FontStyle.italic))
+                  ),
                 ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Subject', style: TextStyle(fontStyle: FontStyle.italic)),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Subject', style: TextStyle(fontStyle: FontStyle.italic)),
+                  ),
                 ),
-              ),
-              DataColumn(
-                label: Expanded(
-                  child: Text('Todo', style: TextStyle(fontStyle: FontStyle.italic)),
+                DataColumn(
+                  label: Expanded(
+                    child: Text('Todo', style: TextStyle(fontStyle: FontStyle.italic)),
+                  ),
                 ),
-              ),
-            ],
-            rows: toDataTableDatasource(context, todoProvider.selectedTodos),
+              ],
+              rows: toDataTableDatasource(context, todoProvider.selectedTodos),
+            ),
           ),
           const SizedBox(height: 20),
           closeButtonWidget(context),
@@ -53,24 +54,20 @@ class ProviderTodoListPage extends StatelessWidget {
   }
 
   List<DataRow> toDataTableDatasource(BuildContext context, List<Todo> todos) {
-    return todos.map((e) => DataRow(
+    return todos.map((todo) => DataRow(
       onSelectChanged: (bool? selected) {
         if (selected!) {
-          gotoTodoDetailPage(context, e);
-          debugPrint('row-selected: ${e.user.name.toString()}');
+          context.push('/todo', extra: todo);
+          debugPrint('row-selected: ${todo.user.name.toString()}');
         }
       },
       cells: <DataCell>[
-        DataCell(Text(e.user.name)),
-        DataCell(Text(DateFormat('yyyy/MM/dd').format(e.date))),
-        DataCell(Text(e.subject)),
-        DataCell(Text(e.todo)),
+        DataCell(Text(todo.user.name)),
+        DataCell(Text(DateFormat('yyyy/MM/dd').format(todo.date))),
+        DataCell(Text(todo.subject)),
+        DataCell(Text(todo.todo)),
       ],
     )).toList();
-  }
-
-  void gotoTodoDetailPage(BuildContext context, Todo todo) async {
-    context.push('/todo', extra: todo);
   }
 
   Widget closeButtonWidget(BuildContext context) {

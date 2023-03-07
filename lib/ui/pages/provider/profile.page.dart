@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 
 import '../../../providers/provider/auth.provider.dart';
 
-// TODO immutable
 class ProviderProfilePage extends StatefulWidget {
   const ProviderProfilePage({super.key});
 
@@ -20,58 +19,62 @@ class _ProviderProfilePageState extends State<ProviderProfilePage> {
   bool _nameHasError = false;
 
   @override
-  Widget build(BuildContext context) {
-    var authProvider = Provider.of<AuthProvider>(context);
+  Widget build(BuildContext _) {
+    // var authProvider = Provider.of<AuthProvider>(context);
     return Scaffold(
         appBar: AppBar(
-          title: Text('${authProvider.me.name} Profile'),
+          title: Consumer<AuthProvider>(
+            builder: (_, authProvider, __) => Text('${authProvider.me.name} Profile'),
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10),
           child: SingleChildScrollView(
             child: Column(
               children: [
-                FormBuilder(
-                  key: _formKey,
-                  // enabled: false,
-                  onChanged: () {
-                    _formKey.currentState!.save();
-                  },
-                  autovalidateMode: AutovalidateMode.always,
-                  initialValue: {
-                    'name': authProvider.me.name,
-                  },
-                  // skipDisabled: true,
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 15),
-                      FormBuilderTextField(
-                        autovalidateMode: AutovalidateMode.always,
-                        name: 'name',
-                        decoration: InputDecoration(
-                          labelText: '이름',
-                          suffixIcon: _nameHasError
-                          ? const Icon(Icons.error, color: Colors.red)
-                              : const Icon(Icons.check, color: Colors.green),
+                Consumer<AuthProvider>(
+                  builder: (_, authProvider, __) => FormBuilder(
+                    key: _formKey,
+                    // enabled: false,
+                    onChanged: () {
+                      _formKey.currentState!.save();
+                    },
+                    autovalidateMode: AutovalidateMode.always,
+                    initialValue: {
+                      'name': authProvider.me.name,
+                    },
+                    // skipDisabled: true,
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 15),
+                        FormBuilderTextField(
+                          autovalidateMode: AutovalidateMode.always,
+                          name: 'name',
+                          decoration: InputDecoration(
+                            labelText: '이름',
+                            suffixIcon: _nameHasError
+                            ? const Icon(Icons.error, color: Colors.red)
+                                : const Icon(Icons.check, color: Colors.green),
+                          ),
+                          onChanged: (val) {
+                            setState(() {
+                              _nameHasError = !(
+                                _formKey.currentState?.fields['name'] ?.validate() ?? false
+                              );
+                            });
+                          },
+                          // valueTransformer: (text) => num.tryParse(text),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(),
+                            FormBuilderValidators.maxLength(10),
+                          ]),
+                          // initialValue: '12',
+                          keyboardType: TextInputType.text,
+                          textInputAction: TextInputAction.next,
                         ),
-                        onChanged: (val) {
-                          setState(() {
-                            _nameHasError = !(
-                              _formKey.currentState?.fields['name'] ?.validate() ?? false
-                            );
-                          });
-                        },
-                        // valueTransformer: (text) => num.tryParse(text),
-                        validator: FormBuilderValidators.compose([
-                          FormBuilderValidators.required(),
-                          FormBuilderValidators.maxLength(10),
-                        ]),
-                        // initialValue: '12',
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                      ),
-                    ],
+                      ],
 
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),

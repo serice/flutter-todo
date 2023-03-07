@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 import '../../models/todo.model.dart';
 import '../../services/todo.service.dart';
@@ -9,17 +8,20 @@ class TodoProvider with ChangeNotifier {
 
   final _todoService = TodoService();
   late AuthProvider _authProvider;
+
   List<Todo> _todos = <Todo>[];
   List<Todo> _selectedTodos = <Todo>[];
 
+  TodoProvider() {
+    _todos = _todoService.getTodos();
+  }
+
+  set(AuthProvider authProvider) {
+    _authProvider = authProvider;
+  }
+
   List<Todo> get todos => _todos;
   List<Todo> get selectedTodos => _selectedTodos;
-
-    void init(BuildContext context) {
-    _todos = _todoService.getTodos();
-    // 수정 되어야 하는 코드
-    _authProvider = Provider.of<AuthProvider>(context);
-  }
 
   void setSelectedTodos(List<Todo> todos) {
     _selectedTodos = todos;

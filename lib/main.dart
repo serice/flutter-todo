@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:go_router/go_router.dart';
+import 'package:my_memo/models/user.model.dart';
 import 'package:my_memo/providers/getx/auth.controller.dart';
 import 'package:my_memo/providers/getx/todo.controller.dart';
 import 'package:my_memo/providers/provider/auth.provider.dart';
@@ -96,13 +97,13 @@ class TodoApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => TodoProvider()),
+        ChangeNotifierProxyProvider<AuthProvider, TodoProvider>(
+          create: (_) => TodoProvider(),
+          update: (_, authProvider, todoProvider) => todoProvider!..set(authProvider)
+        ),
       ],
       child: Builder(
         builder: (context) {
-          context.read<AuthProvider>().init();
-          context.read<TodoProvider>().init(context);
-
           return MaterialApp.router(
             title: 'Todo',
             theme: ThemeData(

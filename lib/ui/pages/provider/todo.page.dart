@@ -22,15 +22,18 @@ class _ProviderTodoPageState extends State<ProviderTodoPage> {
   final DateTime now = DateTime.now();
 
   final _formKey = GlobalKey<FormBuilderState>();
+  late AuthProvider _authProvider;
+  late TodoProvider _todoProvider;
   bool _subjectHasError = false;
   bool _todoHasError = false;
 
   @override
   Widget build(BuildContext context) {
-    var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    _authProvider = context.read<AuthProvider>();
+    _todoProvider = context.read<TodoProvider>();
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.todo != null ? '${widget.todo!.user.name} Todo 수정 하기' : '${authProvider.me.name} Todo 만들기'),
+          title: Text(widget.todo != null ? '${widget.todo!.user.name} Todo 수정 하기' : '${_authProvider.me.name} Todo 만들기'),
         ),
         body: Padding(
           padding: const EdgeInsets.all(10),
@@ -45,7 +48,7 @@ class _ProviderTodoPageState extends State<ProviderTodoPage> {
                   },
                   autovalidateMode: AutovalidateMode.always,
                   initialValue: {
-                    'name': widget.todo != null ? widget.todo!.user.name : authProvider.me.name,
+                    'name': widget.todo != null ? widget.todo!.user.name : _authProvider.me.name,
                     'date' : widget.todo != null ? widget.todo?.date : DateTime(now.year, now.month, now.day),
                     'subject' : widget.todo?.subject,
                     'todo' : widget.todo?.todo,
@@ -163,15 +166,14 @@ class _ProviderTodoPageState extends State<ProviderTodoPage> {
   }
 
   void onSaveTodo(BuildContext context, Map<String, dynamic> value) {
-    var todoProvider = Provider.of<TodoProvider>(context, listen: false);
     if(widget.todo == null) {
-      todoProvider.addTodo(
+      _todoProvider.addTodo(
         date: value['date'],
         subject: value['subject'],
         todo: value['todo'],
       );
     } else {
-      todoProvider.updateTodo(widget.todo!.uuid, date: value['date'],
+      _todoProvider.updateTodo(widget.todo!.uuid, date: value['date'],
         subject: value['subject'],
         todo: value['todo'],
       );
@@ -182,7 +184,7 @@ class _ProviderTodoPageState extends State<ProviderTodoPage> {
   Widget deleteButtonWidget(BuildContext context) {
     return OutlinedButton(
       onPressed: () {
-        context.read<TodoProvider>().deleteTodo(widget.todo!.uuid);
+        _todoProvider.deleteTodo(widget.todo!.uuid);
         context.pop();
       },
       child: Text(
